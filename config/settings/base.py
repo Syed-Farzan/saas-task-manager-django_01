@@ -1,9 +1,15 @@
 from pathlib import Path
 
+import environ
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+env = environ.Env()
 
-SECRET_KEY = "django-insecure-change-this-later"
+environ.Env.read_env(BASE_DIR / ".env")
+
+
+SECRET_KEY = env("SECRET_KEY")
 
 DEBUG = False
 
@@ -17,6 +23,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "apps.accounts",
+    "apps.tasks",
 ]
 
 
@@ -52,12 +60,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": env.db("DATABASE_URL"),
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
