@@ -31,3 +31,12 @@ class HasActiveOrganization(BasePermission):
         request.membership = membership
 
         return True
+
+
+class IsOrgAdmin(BasePermission):
+    def has_permission(self, request, views, **kwargs):
+        membership = getattr(request, "membership", None)
+
+        if membership is None:
+            return False
+        return membership.role == Membership.Role.ADMIN
